@@ -267,10 +267,14 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
+        -- mpja69: La till detta. Men det ska nog gå at fixa i rg?! (snabbare)
+        defaults = {
+          file_ignore_patterns = {
+            'node_modules',
+          },
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        },
         -- },
         -- pickers = {}
         extensions = {
@@ -571,7 +575,8 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -679,6 +684,13 @@ require('lazy').setup({
           -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
+        -- mpja69: dadbod
+        cmp.setup.filetype({ 'sql' }, {
+          sources = {
+            { name = 'vim-dadbod-completion' },
+            { name = 'buffer' },
+          },
+        }),
         sources = {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
