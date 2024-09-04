@@ -19,7 +19,7 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
-    -- 'leoluz/nvim-dap-go',
+    'leoluz/nvim-dap-go',
     'mfussenegger/nvim-dap-python',
     --mpja69: ------------ js -----------------
     'mxsdev/nvim-dap-vscode-js',
@@ -107,7 +107,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        -- 'delve',
+        'delve',
         'python',
       },
     }
@@ -159,6 +159,7 @@ return {
     -- detached = vim.fn.has 'win32' == 0,
     -- },
     -- }
+    require('dap-go').setup()
     require('dap-python').setup '~/.virtualenvs/debugpy/bin/python'
   end,
 }
