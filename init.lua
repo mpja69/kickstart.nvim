@@ -6,6 +6,7 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true -- mpja69: denna var false förut
+vim.cmd 'language en_US'
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -118,6 +119,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- mpja69: Tabstop in Go
+-- vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+--   desc = 'Set tabstop to 4 in Go',
+--   pattern = '*.go',
+--   group = vim.api.nvim_create_augroup('mpja69', { clear = true }),
+--   callback = function()
+--     vim.opt_local.tabstop = 4
+--   end,
+-- })
+
+--
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -482,10 +494,40 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+      -- mpja69: Specify how the border looks like
+      local border = {
+        { '┌', 'FloatBorder' },
+        { '─', 'FloatBorder' },
+        { '┐', 'FloatBorder' },
+        { '│', 'FloatBorder' },
+        { '┘', 'FloatBorder' },
+        { '─', 'FloatBorder' },
+        { '└', 'FloatBorder' },
+        { '│', 'FloatBorder' },
+      }
+      -- mpja69: Add border to the diagnostic popup window
+      vim.diagnostic.config {
+        virtual_text = {
+          prefix = '■ ', -- Could be '●', '▎', 'x', '■', , 
+        },
+        float = { border = border },
+      }
+      -- mpja69: Add the border on hover and on signature help popup window
+      local handlers = {
+        ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+        ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+      }
       local servers = {
         -- clangd = {},
-        -- gopls = {},
-        pyright = {},
+        gopls = {
+          -- mpja69: borders
+          handlers = handlers,
+        },
+        pyright = {
+          -- mpja69: borders
+          handlers = handlers,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -493,10 +535,15 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        tsserver = {
+          -- mpja69: borders
+          handlers = handlers,
+        },
         --
 
         lua_ls = {
+          -- mpja69: borders
+          handlers = handlers,
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
@@ -625,6 +672,11 @@ require('lazy').setup({
       luasnip.config.setup {}
 
       cmp.setup {
+        -- mpja69: Försöker få borders
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
